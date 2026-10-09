@@ -22,6 +22,6 @@ window.TARA_CONFIG = {
   ],
   stavanAudio: "", // Optional: a recording you have permission to share, e.g. "stavan.mp3".
   bookPdf: "", // Optional: your permitted PDF, e.g. "gautam-pruchha.pdf".
-  supabaseUrl: "",
-  supabasePublishableKey: "" // Public/publishable key only. Never a secret/service_role key.
+supabaseUrl: "https://gztsqtaebhvkvxkrnqbn.supabase.co",
+supabasePublishableKey: "sb_publishable_Nl7_PvDWzKNS7-O7OKrSnQ_lx9FQNPk"
 };

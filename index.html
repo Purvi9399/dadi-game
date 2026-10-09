@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dadi’s birthday</title><meta name="description" content="A little birthday celebration for Dadi, made with love by her family.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="styles.css">
+<script src="config.js" defer></script><script src="questions.js" defer></script><script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="masthead"><a class="brand" href="#home"><span class="brand-mark" aria-hidden="true">♥</span>Dadi’s birthday club</a><nav aria-label="Main navigation"><a href="#home">For Dadi</a><a href="#game">The game</a><a href="#pictures">Pictures</a><a href="#leaderboard">Family scores</a></nav></header>
+<main id="main">
+<section id="home" class="page home-page" aria-labelledby="home-title">
+<div class="home-copy"><p class="gujarati" lang="gu">તારાબેનનો જન્મદિવસ</p><span class="eyebrow">A little celebration of our favourite person</span><h1 id="home-title">For our Dadi.<br><em>With all our love.</em></h1><p class="intro">A whole life of stories, a family full of memories, and a little game to see who knows her best.</p><a class="primary" href="#game">Let’s play for Dadi <span aria-hidden="true">♥</span></a><p class="fine">20 questions. Four cards. Plenty of family competition.</p><div class="dedication"><span aria-hidden="true">✧</span> With love, from Purvi & the family.</div></div>
+<div class="portrait-scene"><div class="portrait-frame"><img id="tara-photo" alt="Our beloved Dadi" hidden><div id="photo-fallback" class="photo-fallback"><span>♥</span><p>Our Dadi.</p></div></div><div class="photo-caption">Our very own Dadi <span aria-hidden="true">♥</span></div><img class="samayik-art" src="assets/samayik.png" alt="" aria-hidden="true"><span class="floating-star star-one" aria-hidden="true">✧</span><span class="floating-star star-two" aria-hidden="true">✦</span></div>
+</section>
+<section id="game" class="page" hidden aria-label="How well do you know Dadi?"><div id="game-content"></div></section>
+<section id="leaderboard" class="page" hidden aria-labelledby="board-heading"><div class="board-shell"><span class="eyebrow">The birthday club</span><h1 id="board-heading" tabindex="-1">The family’s in.</h1><p class="muted">Who knows Dadi best? Equal scores share a rank.</p><div id="board-content" aria-live="polite"></div><button class="secondary" id="refresh-board">Refresh scores</button><a class="primary" href="#game">Take the quiz</a></div></section>
+<section id="pictures" class="page" hidden aria-labelledby="pictures-heading"><div class="album-header"><span class="eyebrow">Dadi’s family album</span><h1 id="pictures-heading" tabindex="-1">The moments we keep.</h1><p class="muted">A little collection of our memories together.</p></div><div id="gallery" class="gallery"></div></section>
+<dialog id="photo-dialog" class="photo-dialog" aria-label="Enlarged family photograph"><button id="close-photo" aria-label="Close photograph">×</button><img id="large-photo" alt=""><p id="large-caption"></p></dialog>
+<!-- Future museum section goes here. Add a matching navigation link when ready. -->
+</main>
+<footer><span>For Dadi, with love.</span><span aria-hidden="true">♥</span><span>Our Dadi. Our favourite stories.</span></footer>
+<noscript><p class="notice">Please enable JavaScript to play Dadi’s birthday game.</p></noscript>
+</body></html>

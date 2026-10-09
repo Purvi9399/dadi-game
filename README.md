@@ -1,127 +1,102 @@
-# Dadi’s birthday website
+# Dadi’s birthday website — version 2
 
-A standalone, responsive birthday website for Dadi, with a photo-led home page, a twenty-question quiz, a family leaderboard, and a Pictures gallery. Small Gujarati note: **તારાબેનનો જન્મદિવસ**.
+A static birthday website for GitHub Pages. No build, Node, or npm needed.
 
-No npm install, build step, framework, or paid hosting is required to publish the website files. A shared leaderboard needs the Supabase setup below. The existing ChatGPT-hosted version is separate and is not updated by this package.
+## What is included
 
-## 1. Add Dadi’s picture
+- Main portrait: `dadi.jpg` (the actual solo Dadi photo).
+- All eight uploaded JPGs displayed on a randomly arranged scrapbook wall. Tap any photograph to enlarge it. Shuffle changes the order.
+- The original 20-question quiz, starting with her birth year. Name and relationship are requested after all answers.
+- Dadi’s museum: childhood, a family timeline, everyday favourites, bookshelf, and the kindness corner.
+- A nine-piece photo puzzle. Tap any two pieces to swap them. Pick any photograph from the album. No dragging required.
+- A link to a Gujarati Gautam Pruchha reader and the official Jivdaya Trust donation page.
+- Responsive phone layouts, keyboard navigation, reduced-motion support.
 
-Put her photograph in `assets/dadi.jpg`. Or change `photo` in `config.js` to the correct relative filename (PNG and WebP work too).
+## Update your existing GitHub website
 
-Adjust `photoPosition` in `config.js` if needed: `"50% 35%"` keeps the crop slightly above centre. The real image remains unmodified. Until a photograph is added, the cover shows a heart with “Our Dadi.” No invented portrait is supplied.
+1. Download and extract this ZIP on your computer. Open the extracted folder.
+2. Visit `https://github.com/Purvi9399/dadi-game` and select the branch used for Pages (normally `main`).
+3. Choose **Add file → Upload files**.
+4. Drag the FILES INSIDE the extracted folder onto the upload area. Do not upload the ZIP or a containing folder. `index.html` should be beside `config.js`, `app.js`, `memories.js`, and the photos at the repository root.
+5. Upload all included files, including `memories.js` (new). GitHub will replace matching filenames. The eight photos already in your repository use the same names.
+6. Click **Commit changes**. Use a message such as `Add Dadi's scrapbook, museum and puzzle`.
+7. If Pages is already working, your existing publishing setup should rebuild. Check the repository’s **Actions** tab for completion.
+8. Open `https://purvi9399.github.io/dadi-game/` and refresh. If it still shows the previous design, hard-refresh or try a private/incognito tab.
 
-## 2. Add family pictures
+If publishing for the first time: **Settings → Pages → Build and deployment → Deploy from a branch → main → /(root) → Save**. The repository needs to be public for Pages on a free personal GitHub plan. The contents, photos, and shared family scores will be visible to anyone with access to the public site.
 
-Put the photographs inside `assets/`, then edit the `pictures` list in `config.js`:
+## Connect the shared family leaderboard to Supabase
 
-```js
-pictures: [
-  {
-    src: "assets/dadi-with-purvi.jpg",
-    caption: "Dadi and Purvi",
-    alt: "Dadi with her granddaughter Purvi"
-  },
-  {
-    src: "assets/family.jpg",
-    caption: "All of us, together",
-    alt: "Our family together"
-  }
-],
-```
+The site runs without a database but then shows personal results only. Shared quiz scores need the setup below.
 
-Keep commas between entries. Images open larger when clicked; Escape closes the enlarged photograph. Use simple filenames without spaces. File names and extensions must match exactly, including case. If no photographs have been added, the gallery shows an honest empty state.
-
-## 3. Publish on GitHub Pages
-
-1. Unzip the package.
-2. Create a repository on GitHub, for example `dadi-birthday`.
-3. Upload the **contents** of this folder to the repository root: `index.html`, `styles.css`, `app.js`, `questions.js`, `config.js`, `assets/`, and the other files. Do not put the ZIP itself on Pages. Keep the assets inside their folder.
-4. Open repository **Settings → Pages**.
-5. Under **Build and deployment**, choose **Deploy from a branch**.
-6. Choose the `main` branch and `/ (root)`, then Save.
-7. GitHub shows the published URL when deployment finishes. A project site normally looks like `https://YOUR-USERNAME.github.io/dadi-birthday/`.
-
-All image, script, and stylesheet paths are relative, so the site works at a project-repository path and with a custom domain.
-
-GitHub Pages is a static website host: it does not run the earlier Cloudflare/Next.js server or its database. This package is intentionally standalone.
-
-A published Pages website is generally publicly accessible. Add photographs and names you are happy to show on that URL.
-
-Official instructions: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
-
-## 4. Shared family leaderboard
-
-The quiz works immediately without a database. In that mode, it reveals a personal score but **does not save scores**, and the leaderboard explicitly says it is not connected. It does not pretend device-local scores are shared.
-
-To let people on different phones join one leaderboard:
-
-1. Create a Supabase project.
-2. In its SQL Editor, run all of `supabase-setup.sql` once.
-3. Find the project's URL and **publishable key** in the project connection/API settings.
-4. Paste only those public values into `config.js`:
+1. Open `https://supabase.com/dashboard`, create an account if needed, and create a new project. Pick a project name, database password, and region. Keep the database password for yourself; the website does not use it.
+2. Wait for the project to finish provisioning.
+3. Open **SQL Editor → New query**. Open the included `supabase-setup.sql` in a text editor, copy its ENTIRE contents into the query, and click **Run**. This creates the table and two limited functions used by the site. It enables RLS and disables direct browser access to the table. If you ran the previous version of this same SQL already, it is safe to run again and existing scores remain.
+4. Open the project’s **Connect** dialog. Copy the HTTPS **Project URL** and the **Publishable key** (normally starts with `sb_publishable_`). You can also find publishable keys in project **Settings → API Keys**. This app also supports the legacy `anon` key. Do not copy a database connection string, `service_role`, or secret key.
+5. In your GitHub repository, open `config.js`, click the pencil/edit button, and replace ONLY these two empty values:
 
 ```js
-supabaseUrl: "https://YOUR-PROJECT.supabase.co",
-supabasePublishableKey: "sb_publishable_YOUR_KEY"
+  supabaseUrl: "https://YOUR-PROJECT-REF.supabase.co",
+  supabasePublishableKey: "sb_publishable_YOUR_PUBLIC_KEY"
 ```
 
-A legacy `anon` key also works. Never use a secret key or `service_role` key in a browser or GitHub repository.
+Keep the comma between those lines. Keep the rest of the config unchanged. Commit the edit and wait for Pages to rebuild. The publishable key is intended to be visible in browser code; access is restricted by the database permissions in the SQL script.
 
-5. Commit the changed `config.js` and let Pages republish.
-6. Finish a quiz, enter your name and relationship, and check that your score also appears when the leaderboard is opened on another device.
+6. Play the quiz on the published site. Finish every answer, submit your name and relationship, then open **Family scores**. A row should appear. Open the site on another phone and check that the same row is visible there.
+7. In Supabase **Table Editor → dadi_scores**, you can inspect or delete a test entry.
 
-The database grades the submitted answer indices; the browser does not get to choose its own score. Names/relationships are bounded to sixty characters, row-level security blocks direct table access, and only the two narrowly scoped database functions are callable. Retrying the same submission does not create another entry. Tied scores share a rank; the page shows the top 100 attempts. It is a friendly family game, not a cheat-proof competition: the source is readable, names are self-reported, and anonymous replay is allowed.
+If saving fails: check the project URL and key for stray spaces, ensure the project is active, confirm that the SQL ran without errors and that the Data API exposes `public`. Leave your answers in place and retry. Scores are computed on the server from the answers; the browser does not submit a precomputed score. Anyone with the public quiz link can submit attempts, so this is a friendly family game, not a tamper-proof contest. Use Refresh scores to fetch new results; it does not stream updates automatically.
 
-Shared mode never falls back to an unsaved local score if a network request fails. It preserves your answers and form so you can retry.
+Puzzle points are separate from quiz scores and are shown only in the puzzle session. They are not stored in Supabase. A completed puzzle earns 100 points for up to 8 swaps; extra swaps subtract 2 points each, with a minimum of 10.
 
-Supabase setup is included but has not been deployed into your account. Test it after adding your project values.
+## Add more photographs
 
-Official references:
-- https://supabase.com/docs/guides/getting-started/api-keys
-- https://supabase.com/docs/guides/database/functions
-- https://supabase.com/docs/guides/database/postgres/row-level-security
+1. Upload each new JPG/PNG to the repository root. Use simple filenames such as `dadi10.jpg` and match case exactly.
+2. In `config.js`, add a comma-separated entry inside `pictures`:
 
-## 5. Custom domain or shorter link
-
-You do not need a domain to use Pages. To use a domain you own, enter it in repository **Settings → Pages → Custom domain**, then configure your registrar’s DNS as GitHub instructs. For a subdomain, the CNAME points to `YOUR-USERNAME.github.io`, not the full repository URL. Enable HTTPS when GitHub makes it available. Set the custom domain in Pages before pointing DNS at GitHub.
-
-Official instructions: https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site
-
-Alternatively, shorten the final live Pages URL using your preferred link-shortening service. No URL is shortened or domain purchased by this package.
-
-## 6. Change the content
-
-- `index.html`: opening-page wording, navigation, section containers.
-- `styles.css`: colours, layout, photo frames, and cards.
-- `questions.js`: question text, choices, correct indices, and answer-review memories. Choices are shuffled for each new attempt.
-- `config.js`: portrait, gallery, shared-leaderboard connection.
-- `app.js`: quiz, gallery, navigation, and saving behaviour.
-- `supabase-setup.sql`: server grading and shared scores.
-
-Birth year is question one. There are separate Chinese-checkers and carrom questions. White is an option in the colour question. Artwork in the question area contains no answer-specific flowers, food, bicycles, subjects, seasons, or board games. The small Samayik bag is one personal decorative detail; the overall theme is Dadi’s birthday scrapbook.
-
-The unclear “5–7” note and the later phrase you asked to leave out are not used. The book and stavan use the supplied transliterations; you can refine the spelling when you have a book cover or the Gujarati title.
-
-If you change correct answers, their order, or the question count in shared mode, update the matching server answer key and total in `supabase-setup.sql`, and use a new quiz version in both places before allowing new scores. Wording-only changes do not require an answer-key change.
-
-## 7. Add the museum later
-
-The game is already one section of the larger website. Add a new `<section id="museum" class="page" hidden>` at the marked location in `index.html`, add a navigation link, and include `museum` in the allowed section names in `app.js`’s `route()` function. It can use the same palette and photo gallery styles.
-
-## Preview locally
-
-Open `index.html` directly for a quick offline look. For the most reliable local preview, run:
-
-```sh
-python3 -m http.server 8000
+```js
+{src:"dadi10.jpg", caption:"A little memory together", alt:"Describe who or what is in this photograph"}
 ```
 
-Then open `http://localhost:8000`. This is a static-file server; no dependencies are installed.
+3. Commit. The scrapbook and puzzle picker both use that list. Gallery order is shuffled whenever you open it.
+4. Set `puzzlePhoto` to the filename of your preferred Dadi-and-Dada picture. The current default, `dadi7.jpg`, is a family group photo. The people in it have not been identified individually.
 
-## Artwork
+## Make the museum yours
 
-`assets/samayik.png` is an original illustration made with the built-in image-generation tool. It depicts a cotton Samayik bag, folded cloth, a plain prayer book and beads on pale pink; it is decorative, not a photograph of Dadi’s belongings. It contains no quiz-answer subjects or religious emblems. No portrait of Dadi was generated.
+Edit the museum story text in `index.html`. Keep dates and memories confirmed by Dadi. The current historical section links to the History of Vadodara archive; it does not claim that the displayed personal photographs are childhood pictures.
 
-## Validation in this package
+For dated historical photos you have permission to publish, upload the photo and add to `historicalPhotos` in `config.js`:
 
-JavaScript syntax, all twenty question definitions, correct-answer indices, requested changes, HTML asset paths, and the matching SQL answer key were checked. Browser layout/interaction checks could not run because this environment has no browser executable. The Supabase functions require your own project setup and have not been integration-tested against a live database.
+```js
+{src:"baroda-1955.jpg", caption:"Baroda, 1955 — photographer/source credit", alt:"Description of this historical photograph", sourceUrl:"https://the-original-source"}
+```
+
+Only label a year if the source establishes it. No AI reconstruction is presented as a historical photograph.
+
+Add Purvi’s poems in `poems`:
+
+```js
+{title:"For my Dadi", text:"First line of the poem.\nSecond line of the poem."}
+```
+
+Upload an audio recording you have permission to share and set `stavanAudio: "stavan.mp3"`. Her favourite stavan is named in the museum even without a recording.
+
+The bookshelf links to `https://jainqq.org/explore/037180/1`, a Gujarati Gautam Pruchha edition by Jayanandvijay, published by Guru Ramchandra Prakashan Samiti, 92 pages. Check Dadi’s cover to confirm whether it is her edition. The reader opens on the book provider’s site. A provider’s available PDF download is not permission to redistribute it. If you have a permitted PDF to publish, upload it and set `bookPdf: "gautam-pruchha.pdf"`; an additional reading link then appears.
+
+## An extra birthday idea
+
+“79 little acts of kindness”: ask each family member to choose one small act in her honour. Collect a sentence or voice note about it and read/play them for her. This honours the kindness she gives rather than asking her to be comfortable with a big party. The current website introduces the idea; it does not claim to collect or count pledges.
+
+## Local editing in VS Code
+
+Open this extracted folder in VS Code. Edit the HTML, CSS, or JS, then preview with the VS Code Live Server extension (or any static HTTP server). Upload the changed files to GitHub when ready. This version has no build command. If you prefer Git, clone your repository, copy these files into the clone, inspect `git diff`, then commit and push. Do not upload your Supabase database password or secret keys.
+
+## Links and remaining content
+
+- Old Vadodara photographs: https://historyofvadodara.in/gallery/photos/
+- Then and now: https://historyofvadodara.in/then-now/
+- Book reader: https://jainqq.org/explore/037180/1
+- Donation: https://www.jivdayatrust.org/donate-now/
+- Supabase public keys: https://supabase.com/docs/guides/getting-started/api-keys
+
+The donation is processed on the charity’s site. This website does not collect payments. Old family photographs, poems, a stavan recording, and the exact book edition can be added when you have them.
